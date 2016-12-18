@@ -33,7 +33,11 @@ public class BeanUtils {
             List<Method> getters = new ArrayList<>();
             List<Class> typesGetters = new ArrayList<>();
             for (PropertyDescriptor descriptor : fromDescriptors) {
-                getters.add(descriptor.getReadMethod());
+                Method getter = descriptor.getReadMethod();
+                if (getter.getName().equals("getClass")) {
+                    continue;
+                }
+                getters.add(getter);
                 typesGetters.add(descriptor.getPropertyType());
             }
 
@@ -46,16 +50,29 @@ public class BeanUtils {
             List<Method> setters = new ArrayList<>();
             List<Class> typesSetters = new ArrayList<>();
             for (PropertyDescriptor descriptor : toDescriptors) {
-                setters.add(descriptor.getWriteMethod());
+                Method setter = descriptor.getWriteMethod();
+                setters.add(setter);
                 typesSetters.add(descriptor.getPropertyType());
             }
 
-            for (int i = 0; i < setters.size(); ++i) {
+            /*for (int i = 0; i < setters.size(); ++i) {
                 for (int j = 0; j < getters.size(); ++j) {
                     if (isCompatible(setters.get(i), getters.get(j))) {
                         setters.get(i).invoke(to, getters.get(j).invoke(from));
                     }
                 }
+            }*/
+            for (Method setter : setters) {
+                if (setter == null ) { // КОСТЫЛЬ
+                    continue;
+                }
+                for (Method getter : getters) {
+                    if (isCompatible(setter, getter)) {
+                        setter.invoke(to, getter.invoke(from));
+                        break;
+                    }
+                }
+
             }
 
 

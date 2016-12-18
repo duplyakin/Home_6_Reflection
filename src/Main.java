@@ -47,11 +47,20 @@ public class Main {
         alien.setWeight(10);
         alien.setHeight(10);
         alien.setPet(cat);
+        System.out.println("oldPerson:");
         System.out.println(oldPerson);
+        System.out.println("youngPerson:");
         System.out.println(youngPerson);
         System.out.println(alien);
         BeanUtils beanUtils = new BeanUtils();
+        System.out.println("youngPerson ---> oldPerson");
         beanUtils.assign(youngPerson, oldPerson);
+        System.out.println("youngPerson:");
+        System.out.println(youngPerson);
+
+        System.out.println("youngPerson ---> alien");
+        beanUtils.assign(youngPerson, alien);
+        System.out.println("youngPerson:");
         System.out.println(youngPerson);
 
         int[] array = new int[10];
